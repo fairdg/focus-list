@@ -6,9 +6,19 @@ build-job:
   tags:
     - docker
   image: python:3.11-alpine
+  cache:
+    key: pip
+    paths:
+      - .cache/pip
+  variables:
+    PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   script:
     - python -m pip install -r Api/requirements.txt
     - mkdir -p build/api build/web
     - cp -r Api/* build/api/
     - cp -r Web/* build/web/
     - python -m compileall build/api
+  artifacts:
+    paths:
+      - build/
+    expire_in: 1 week
