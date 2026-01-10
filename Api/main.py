@@ -25,7 +25,8 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory=str(WEB_DIR)), name="web")
 
-engine = create_async_engine("sqlite+aiosqlite:///./ToDoList.db")
+db_path = BASE_DIR / "ToDoList.db"
+engine = create_async_engine(f"sqlite+aiosqlite:///{db_path}")
 new_session = async_sessionmaker(engine, expire_on_commit=False)
 
 async def get_session():
@@ -44,6 +45,11 @@ class TaskModel(Base):
 class TaskAddSchema(BaseModel):
     text: str = Field(min_length=1, max_length=500)
     completed: bool = False
+
+@app.on_event("startup")
+async def init_db() -> None:
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
 def serialize_task(task: "TaskModel") -> dict:
     return {"id": task.id, "text": task.text, "completed": task.completed}
@@ -98,4 +104,3 @@ async def read_index():
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
-
