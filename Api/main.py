@@ -9,6 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent
 WEB_DIR = BASE_DIR.parent / "Web"
@@ -25,7 +26,7 @@ app.add_middleware(
 
 app.mount("/static", StaticFiles(directory=str(WEB_DIR)), name="web")
 
-db_path = BASE_DIR / "ToDoList.db"
+db_path = Path(os.environ.get("DB_PATH", str(BASE_DIR / "ToDoList.db")))
 engine = create_async_engine(f"sqlite+aiosqlite:///{db_path}")
 new_session = async_sessionmaker(engine, expire_on_commit=False)
 

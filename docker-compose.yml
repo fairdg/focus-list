@@ -6,3 +6,7 @@ services:
     ports:
       - "8000:8000"
     restart: unless-stopped
+    environment:
+      - DB_PATH=/data/ToDoList.db
+    volumes:
+      - ./data:/data
