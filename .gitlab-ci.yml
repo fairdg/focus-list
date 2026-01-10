@@ -4,7 +4,6 @@ test-runner:
   script:
     - echo " Runner connect!"
     - docker --version
-    - echo "Архитектура: $(uname -m)"
     - echo "test ok"
 
 
