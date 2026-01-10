@@ -6,5 +6,8 @@ build-job:
   tags:
     - docker
   script:
-    - pip install -r Api/requirements.txt
-    - python Api/main.py
+    - python -m pip install -r Api/requirements.txt
+    - mkdir -p build/api build/web
+    - cp -r Api/* build/api/
+    - cp -r Web/* build/web/
+    - python -m compileall build/api
