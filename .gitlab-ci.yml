@@ -1,14 +1,10 @@
-build-job:
-  tags:
-    - docker
 stages:
   - build
+
 build_backend:
   stage: build
+  tags:
+    - docker
   script:
-    - pip install -r Api/requirements.txt 
-    - python Api/main.py                    
-  artifacts:
-    paths:
-      - Api/ToDoList.db 
-    expire_in: 1 hour
+    - pip install -r Api/requirements.txt
+    - python Api/main.py
