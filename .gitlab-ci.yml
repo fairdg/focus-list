@@ -1,6 +1,6 @@
 test-runner:
   tags:
-    - docker
+    - vm
   script:
     - echo " Runner connect!"
     - docker --version
