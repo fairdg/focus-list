@@ -1,14 +1,5 @@
-default:
+build-job:
+  script:
+    - echo "Building the project"
   tags:
     - my-local-runner
-
-stages:
-  - build
-  - test
-  - deploy
-
-build-job:
-  stage: build
-  script:
-    - echo "Compiling the code..."
-    - echo "Compile complete."
