@@ -1,7 +1,7 @@
 stages:
   - build
 
-build_backend:
+build-job:
   stage: build
   tags:
     - docker
