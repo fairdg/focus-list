@@ -1,5 +1,14 @@
 build-job:
-  script:
-    - echo "Building the project"
   tags:
     - docker
+stages:
+  - build
+build_backend:
+  stage: build
+  script:
+    - pip install -r Api/requirements.txt 
+    - python Api/main.py                    
+  artifacts:
+    paths:
+      - Api/ToDoList.db 
+    expire_in: 1 hour
