@@ -1,6 +1,6 @@
 test-runner:
-tags:
-    - my-local-runner
+  tags:
+      - my-local-runner
   script:
     - echo " Runner connect!"
     - docker --version
