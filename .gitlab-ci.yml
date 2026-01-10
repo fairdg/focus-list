@@ -2,4 +2,4 @@ build-job:
   script:
     - echo "Building the project"
   tags:
-    - my-local-runner
+    - docker
