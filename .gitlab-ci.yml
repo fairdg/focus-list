@@ -1,5 +1,6 @@
 stages:
   - lint
+  - test
   - build
   - deploy
   - notify
@@ -44,6 +45,13 @@ lint-job:
   script:
     - python -m pip install --no-cache-dir ruff
     - ruff check Api
+
+unit-tests:
+  stage: test
+  image: python:3.11-alpine
+  script:
+    - python -m pip install --no-cache-dir -r Api/requirements.txt pytest
+    - pytest -q
 
 deploy-job:
   stage: deploy
