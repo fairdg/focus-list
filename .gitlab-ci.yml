@@ -33,6 +33,7 @@ deploy-job:
     - apk add --no-cache git docker-compose
   script:
     - cd /home/vboxuser/todolist
+    - git config --global --add safe.directory /home/vboxuser/todolist
     - git pull
     - docker-compose down
     - docker-compose build
