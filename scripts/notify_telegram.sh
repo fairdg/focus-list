@@ -22,7 +22,8 @@ case "$status" in
     ;;
 esac
 
-text="${icon} *${label}*\n*Project:* ${CI_PROJECT_NAME}\n*Version:* ${version}\n*Pipeline:* ${CI_PIPELINE_URL}"
+text="$(printf "%s *%s*\n*Project:* %s\n*Version:* %s\n*Pipeline:* %s" \
+  "$icon" "$label" "${CI_PROJECT_NAME}" "$version" "${CI_PIPELINE_URL}")"
 
 curl -sS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
   -d "chat_id=${TELEGRAM_CHAT_ID}" \
