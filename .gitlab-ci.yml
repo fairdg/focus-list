@@ -1,4 +1,5 @@
 stages:
+  - lint
   - build
   - deploy
   - notify
@@ -36,6 +37,13 @@ build-job:
     paths:
       - build/
     expire_in: 1 week
+
+lint-job:
+  stage: lint
+  image: python:3.11-alpine
+  script:
+    - python -m pip install --no-cache-dir ruff
+    - ruff check Api
 
 deploy-job:
   stage: deploy
