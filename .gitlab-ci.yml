@@ -1,6 +1,7 @@
 stages:
   - build
   - deploy
+  - notify
 
 build-job:
   stage: build
@@ -38,5 +39,27 @@ deploy-job:
     - docker-compose down
     - docker-compose build
     - docker-compose up -d
+  only:
+    - master
+
+notify-success:
+  stage: notify
+  image: curlimages/curl:8.6.0
+  script:
+    - STATUS=success sh scripts/notify_telegram.sh
+  when: on_success
+  needs:
+    - deploy-job
+  only:
+    - master
+
+notify-failure:
+  stage: notify
+  image: curlimages/curl:8.6.0
+  script:
+    - STATUS=failure sh scripts/notify_telegram.sh
+  when: on_failure
+  needs:
+    - deploy-job
   only:
     - master
