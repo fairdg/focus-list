@@ -34,7 +34,7 @@ deploy-job:
   script:
     - cd /home/vboxuser/todolist
     - git config --global --add safe.directory /home/vboxuser/todolist
-    - git pull
+    - git pull "$CI_REPOSITORY_URL" "$CI_COMMIT_REF_NAME"
     - docker-compose down
     - docker-compose build
     - docker-compose up -d
