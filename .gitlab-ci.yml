@@ -27,7 +27,7 @@ build-job:
 deploy-job:
   stage: deploy
   tags:
-    - deploy
+    - docker
   script:
     - cd /home/vboxuser/todolist
     - git pull
