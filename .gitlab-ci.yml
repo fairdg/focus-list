@@ -3,6 +3,10 @@ stages:
   - deploy
   - notify
 
+variables:
+  DEPLOY_PATH: "/home/vboxuser/todolist"
+  DOCKER_COMPOSE_FILE: "docker-compose.yml"
+
 build-job:
   stage: build
   tags:
@@ -32,15 +36,17 @@ deploy-job:
   image: docker:24.0.7-cli
   environment:
     name: production
+  needs:
+    - build-job
   before_script:
     - apk add --no-cache git docker-compose
   script:
-    - cd /home/vboxuser/todolist
-    - git config --global --add safe.directory /home/vboxuser/todolist
+    - cd "$DEPLOY_PATH"
+    - git config --global --add safe.directory "$DEPLOY_PATH"
     - git pull "$CI_REPOSITORY_URL" "$CI_COMMIT_REF_NAME"
-    - docker-compose down
-    - docker-compose build
-    - docker-compose up -d
+    - docker-compose -f "$DOCKER_COMPOSE_FILE" down
+    - docker-compose -f "$DOCKER_COMPOSE_FILE" build
+    - docker-compose -f "$DOCKER_COMPOSE_FILE" up -d
   only:
     - master
 
