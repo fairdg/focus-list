@@ -7,6 +7,14 @@ variables:
   DEPLOY_PATH: "/home/vboxuser/todolist"
   DOCKER_COMPOSE_FILE: "docker-compose.yml"
 
+.notify-template:
+  stage: notify
+  image: curlimages/curl:8.6.0
+  needs:
+    - deploy-job
+  only:
+    - master
+
 build-job:
   stage: build
   tags:
@@ -51,23 +59,13 @@ deploy-job:
     - master
 
 notify-success:
-  stage: notify
-  image: curlimages/curl:8.6.0
+  extends: .notify-template
   script:
     - STATUS=success sh scripts/notify_telegram.sh
   when: on_success
-  needs:
-    - deploy-job
-  only:
-    - master
 
 notify-failure:
-  stage: notify
-  image: curlimages/curl:8.6.0
+  extends: .notify-template
   script:
     - STATUS=failure sh scripts/notify_telegram.sh
   when: on_failure
-  needs:
-    - deploy-job
-  only:
-    - master
