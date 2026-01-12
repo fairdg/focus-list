@@ -9,13 +9,15 @@ variables:
   DEPLOY_PATH: "/home/vboxuser/todolist"
   DOCKER_COMPOSE_FILE: "docker-compose.yml"
 
-.notify-template:
-  stage: notify
-  image: curlimages/curl:8.6.0
-  needs:
-    - deploy-job
-  only:
-    - master
+include :
+  - local: "ci/template.yml"
+# .notify-template:
+#   stage: notify
+#   image: curlimages/curl:8.6.0
+#   needs:
+#     - deploy-job
+#   only:
+#     - master
 
 build-job:
   stage: build

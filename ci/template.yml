@@ -1,0 +1,7 @@
+.notify-template:
+  stage: notify
+  image: curlimages/curl:8.6.0
+  needs:
+    - deploy-job
+  only:
+    - master
