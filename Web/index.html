@@ -3,38 +3,67 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Мой сайт</title>
+  <title>Фокус-лист</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <header>
-    <nav>
-      <ul>
-        <li><a href="#">Главная</a></li>
-      </ul>
-    </nav>
-  </header>
+  <div class="app-shell">
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">Личный ToDo</p>
+        <h1>Фокус-лист</h1>
+      </div>
+      <div class="header-chip" id="todaylabel">Сегодня</div>
+    </header>
 
-  <div>
-      <ul id="taskslist">
-          <li id="emptylist">
-              <div class="empty-list">Нет задач</div>
-          </li> 
-      </ul>
+    <main class="workspace">
+      <section class="summary-panel" aria-label="Сводка задач">
+        <div class="progress-ring" id="progressring" aria-hidden="true">
+          <span id="progressvalue">0%</span>
+        </div>
+        <div>
+          <p class="panel-label">Прогресс</p>
+          <h2 id="focusmessage">Добавьте первую задачу</h2>
+        </div>
+        <div class="stats-grid">
+          <div>
+            <span id="totalcount">0</span>
+            <p>Всего</p>
+          </div>
+          <div>
+            <span id="activecount">0</span>
+            <p>В работе</p>
+          </div>
+          <div>
+            <span id="donecount">0</span>
+            <p>Готово</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="task-panel" aria-label="Список задач">
+        <form id="ToDo" class="task-form">
+          <label class="visually-hidden" for="taskinput">Новая задача</label>
+          <input type="text" id="taskinput" name="ToDo-text" placeholder="Что нужно сделать?" maxlength="500" required>
+          <button type="submit">Добавить</button>
+        </form>
+
+        <div class="toolbar">
+          <label class="visually-hidden" for="searchinput">Поиск задач</label>
+          <input type="search" id="searchinput" placeholder="Найти задачу">
+          <div class="filters" aria-label="Фильтр задач">
+            <button type="button" class="filter active" data-filter="all">Все</button>
+            <button type="button" class="filter" data-filter="active">В работе</button>
+            <button type="button" class="filter" data-filter="done">Готово</button>
+          </div>
+          <button type="button" class="ghost-button" id="clearcompleted">Очистить готовые</button>
+        </div>
+
+        <p class="status-message" id="statusmessage" aria-live="polite"></p>
+        <ul id="taskslist" class="tasks-list"></ul>
+      </section>
+    </main>
   </div>
-  
-  <form id="ToDo">
-    <div class = "addDo">
-    <button type="submit">  Добавить задачу</button>
-    <input type="text" id="taskinput" name="ToDo-text" placeholder="Задача" required>
-  </div>
-  </form>
-  
-  
-  <main>
-    <!-- <h1>Добро пожаловать</h1>  -->
-    <p>Это ToDoList</p>
-  </main>
   <script src="/static/main.js" defer></script>
 </body>
 </html>
