@@ -2,14 +2,6 @@
 
 FocusList — компактная панель задач для ежедневной работы. Проект начался как простой ToDo List, а затем вырос в небольшой full-stack сервис: backend на FastAPI, хранение в SQLite, frontend на vanilla JavaScript, запуск через Docker и CI/CD через GitLab.
 
-Рекомендуемое название репозитория: `focus-list`.
-
-Альтернативные варианты:
-
-- `focus-board`
-- `task-pulse`
-- `daily-focus`
-
 ## Идея
 
 Проект не пытается заменить тяжелые системы управления проектами. Его задача уже и понятнее: дать одному пользователю удобное место, где можно быстро записать задачи, видеть прогресс, фильтровать список и закрывать выполненную работу без переходов между страницами.
@@ -64,8 +56,6 @@ SQLite database
 - `.gitlab-ci.yml` описывает lint, tests, build, deploy и notify jobs.
 - `Dockerfile` и `docker-compose.yml` описывают контейнерный запуск.
 
-Такая структура хорошо подходит для учебного проекта, pet-проекта или небольшой демонстрации CI/CD. Если приложение будет расти, backend стоит разделить на отдельные модули для базы данных, моделей, схем и роутеров.
-
 ## Стек технологий
 
 Backend:
@@ -94,29 +84,6 @@ Frontend:
 - Ruff
 - Pytest
 - Telegram-уведомления о деплое через shell script
-
-## Структура проекта
-
-```text
-.
-├── Api/
-│   ├── main.py
-│   └── requirements.txt
-├── Web/
-│   ├── index.html
-│   ├── main.js
-│   └── style.css
-├── ci/
-│   └── template.yml
-├── scripts/
-│   └── notify_telegram.sh
-├── tests/
-│   └── test_models.py
-├── .gitlab-ci.yml
-├── Dockerfile
-├── docker-compose.yml
-└── README.md
-```
 
 ## Требования
 
@@ -193,24 +160,6 @@ Docker Compose сохраняет SQLite-базу в локальной дире
 docker-compose down
 ```
 
-## API
-
-Основной endpoint задач:
-
-```text
-/api/tasks
-```
-
-Формат задачи:
-
-```json
-{
-  "id": 1,
-  "text": "Подготовить заметки к релизу",
-  "completed": false
-}
-```
-
 Endpoints:
 
 | Method | Path | Описание |
@@ -223,25 +172,6 @@ Endpoints:
 | `PATCH` | `/api/tasks/{id}/toggle` | Переключает статус выполнения. |
 | `DELETE` | `/api/tasks/{id}` | Удаляет задачу. |
 
-Создать задачу через curl:
-
-```sh
-curl -X POST http://localhost:8000/api/tasks \
-  -H "Content-Type: application/json" \
-  -d '{"text":"Проверить CI pipeline","completed":false}'
-```
-
-Переключить статус задачи:
-
-```sh
-curl -X PATCH http://localhost:8000/api/tasks/1/toggle
-```
-
-Удалить задачу:
-
-```sh
-curl -X DELETE http://localhost:8000/api/tasks/1
-```
 
 ## Тесты и качество
 
@@ -262,13 +192,6 @@ ruff check Api
 ```sh
 python3 -m compileall Api
 ```
-
-Проверить синтаксис frontend JavaScript, если установлен Node.js:
-
-```sh
-node --check Web/main.js
-```
-
 ## CI/CD
 
 GitLab pipeline состоит из этапов:
@@ -294,21 +217,6 @@ DEPLOY_PATH=/home/vboxuser/todolist
 DOCKER_COMPOSE_FILE=docker-compose.yml
 ```
 
-Ожидаемые переменные для Telegram-уведомлений:
-
-```text
-TELEGRAM_BOT_TOKEN
-TELEGRAM_CHAT_ID
-```
-
-## Текущие ограничения
-
-- Случаи "задача не найдена" пока возвращают JSON-сообщение вместо HTTP `404`.
-- CORS полностью открыт.
-- Нет авторизации и разделения задач по пользователям.
-- Нет миграций базы данных.
-- Тесты покрывают только сериализацию модели и валидацию схемы, но не полный API flow.
-
 ## Roadmap
 
 Ближайшие улучшения:
@@ -324,25 +232,3 @@ TELEGRAM_CHAT_ID
 - Добавить Alembic migrations, если схема задач будет расширяться.
 - Добавить сроки выполнения или приоритеты.
 - Добавить frontend-тесты для фильтров, поиска и редактирования.
-
-Дальше:
-
-- Добавить авторизацию и пользовательские списки задач.
-- Добавить health checks для деплоя.
-- Добавить structured logging.
-- Настроить production ASGI server.
-
-## Рекомендация по названию репозитория
-
-Лучший вариант:
-
-```text
-focus-list
-```
-
-Почему это название подходит:
-
-- Оно совпадает с текущей идеей продукта: сфокусированный список задач, а не просто демо ToDo CRUD.
-- Коротко и понятно выглядит в URL.
-- Английский repo slug хорошо читается, а интерфейс может оставаться русским: `Фокус-лист`.
-- Название оставляет место для роста проекта за пределы базового списка задач.
