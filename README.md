@@ -1,44 +1,44 @@
 # FocusList
 
-FocusList is a compact task dashboard for keeping a daily work list under control. It started as a simple ToDo app and grew into a small full-stack project with a FastAPI backend, SQLite persistence, a vanilla JavaScript frontend, Docker runtime, and GitLab CI/CD.
+FocusList — компактная панель задач для ежедневной работы. Проект начался как простой ToDo List, а затем вырос в небольшой full-stack сервис: backend на FastAPI, хранение в SQLite, frontend на vanilla JavaScript, запуск через Docker и CI/CD через GitLab.
 
-Recommended repository name: `focus-list`.
+Рекомендуемое название репозитория: `focus-list`.
 
-Other good names if you want alternatives:
+Альтернативные варианты:
 
 - `focus-board`
 - `task-pulse`
 - `daily-focus`
 
-## Idea
+## Идея
 
-The project is not trying to be a heavy project-management system. Its job is narrower: give one person a clean place to capture tasks, see progress, filter the list, and close completed work without leaving the page.
+Проект не пытается заменить тяжелые системы управления проектами. Его задача уже и понятнее: дать одному пользователю удобное место, где можно быстро записать задачи, видеть прогресс, фильтровать список и закрывать выполненную работу без переходов между страницами.
 
-The current UI is built around a "focus dashboard":
+Текущий интерфейс построен как "фокус-панель":
 
-- progress ring for completed work;
-- counters for all, active, and completed tasks;
-- search with highlighted matches;
-- filters for all, active, and completed tasks;
-- inline task editing;
-- one-click completion toggle;
-- cleanup for completed tasks.
+- кольцо прогресса по выполненным задачам;
+- счетчики всех, активных и выполненных задач;
+- поиск с подсветкой совпадений;
+- фильтры по статусу;
+- inline-редактирование текста задачи;
+- переключение выполнения в один клик;
+- очистка выполненных задач.
 
-## Features
+## Возможности
 
-- Create tasks.
-- Edit task text inline.
-- Mark tasks as completed or return them to active work.
-- Delete individual tasks.
-- Clear all completed tasks from the UI.
-- Search tasks on the client.
-- Filter tasks by status.
-- Persist tasks in SQLite.
-- Serve frontend and API from one FastAPI application.
-- Run locally or with Docker Compose.
-- Build, lint, test, deploy, and notify through GitLab CI.
+- Создание задач.
+- Редактирование текста задачи прямо в списке.
+- Перевод задачи в выполненные и возврат в работу.
+- Удаление отдельных задач.
+- Очистка всех выполненных задач из интерфейса.
+- Клиентский поиск по задачам.
+- Фильтрация задач по статусу.
+- Хранение данных в SQLite.
+- Выдача frontend и API из одного FastAPI-приложения.
+- Локальный запуск и запуск через Docker Compose.
+- Lint, тесты, сборка, деплой и уведомления через GitLab CI.
 
-## Architecture
+## Архитектура
 
 ```text
 Browser
@@ -54,19 +54,19 @@ FastAPI app: Api/main.py
 SQLite database
 ```
 
-The project intentionally keeps the architecture small:
+Архитектура намеренно оставлена простой:
 
-- `Api/main.py` owns the FastAPI app, API routes, SQLAlchemy model, Pydantic schema, database startup, and static file serving.
-- `Web/index.html` defines the dashboard layout.
-- `Web/main.js` manages client-side state, rendering, filters, search, editing, and API calls.
-- `Web/style.css` contains the responsive dashboard styling.
-- `tests/test_models.py` covers basic schema and serialization behavior.
-- `.gitlab-ci.yml` defines lint, test, build, deploy, and notify jobs.
-- `Dockerfile` and `docker-compose.yml` define the container runtime.
+- `Api/main.py` содержит FastAPI-приложение, API routes, SQLAlchemy-модель, Pydantic-схему, инициализацию базы данных и выдачу статических файлов.
+- `Web/index.html` описывает структуру страницы.
+- `Web/main.js` управляет состоянием на клиенте, рендерингом, фильтрами, поиском, редактированием и API-запросами.
+- `Web/style.css` содержит адаптивные стили интерфейса.
+- `tests/test_models.py` проверяет базовую сериализацию модели и валидацию схемы.
+- `.gitlab-ci.yml` описывает lint, tests, build, deploy и notify jobs.
+- `Dockerfile` и `docker-compose.yml` описывают контейнерный запуск.
 
-This layout is practical for a learning project or a small demo. If the app grows, the backend can be split into modules for database setup, models, schemas, and routers.
+Такая структура хорошо подходит для учебного проекта, pet-проекта или небольшой демонстрации CI/CD. Если приложение будет расти, backend стоит разделить на отдельные модули для базы данных, моделей, схем и роутеров.
 
-## Tech Stack
+## Стек технологий
 
 Backend:
 
@@ -86,16 +86,16 @@ Frontend:
 - Vanilla JavaScript
 - Fetch API
 
-Infrastructure:
+Инфраструктура:
 
 - Docker
 - Docker Compose
 - GitLab CI/CD
 - Ruff
 - Pytest
-- Telegram deploy notifications through a shell script
+- Telegram-уведомления о деплое через shell script
 
-## Project Structure
+## Структура проекта
 
 ```text
 .
@@ -118,76 +118,76 @@ Infrastructure:
 └── README.md
 ```
 
-## Requirements
+## Требования
 
-For local development:
+Для локальной разработки:
 
-- Python 3.11 recommended
+- Python 3.11 рекомендуется
 - `pip`
-- Docker and Docker Compose if you want containerized runtime
+- Docker и Docker Compose для контейнерного запуска
 
-The CI pipeline uses `python:3.11-alpine`.
+В CI используется образ `python:3.11-alpine`.
 
-## Local Setup
+## Локальный запуск
 
-Create and activate a virtual environment:
+Создать и активировать виртуальное окружение:
 
 ```sh
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 
-Install runtime and development dependencies:
+Установить runtime и dev-зависимости:
 
 ```sh
 python3 -m pip install -r Api/requirements.txt pytest ruff
 ```
 
-Run the application:
+Запустить приложение:
 
 ```sh
 uvicorn Api.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-Open:
+Открыть в браузере:
 
 ```text
 http://localhost:8000
 ```
 
-By default, local SQLite data is stored in:
+По умолчанию локальная SQLite-база создается здесь:
 
 ```text
 Api/ToDoList.db
 ```
 
-You can override the database path:
+Путь к базе можно переопределить через `DB_PATH`:
 
 ```sh
 DB_PATH=/tmp/focus-list.db uvicorn Api.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-## Docker Run
+## Запуск через Docker
 
-Build and start the app:
+Собрать и запустить приложение:
 
 ```sh
 docker-compose up --build
 ```
 
-Open:
+Открыть:
 
 ```text
 http://localhost:8000
 ```
 
-Docker Compose persists the SQLite database in the local `data/` directory:
+Docker Compose сохраняет SQLite-базу в локальной директории `data/`:
 
 ```text
 ./data/ToDoList.db
 ```
 
-Stop the app:
+Остановить приложение:
 
 ```sh
 docker-compose down
@@ -195,75 +195,75 @@ docker-compose down
 
 ## API
 
-Base task endpoint:
+Основной endpoint задач:
 
 ```text
 /api/tasks
 ```
 
-Task shape:
+Формат задачи:
 
 ```json
 {
   "id": 1,
-  "text": "Prepare release notes",
+  "text": "Подготовить заметки к релизу",
   "completed": false
 }
 ```
 
 Endpoints:
 
-| Method | Path | Description |
+| Method | Path | Описание |
 | --- | --- | --- |
-| `GET` | `/` | Returns the web app HTML. |
-| `GET` | `/static/*` | Serves frontend assets from `Web/`. |
-| `GET` | `/api/tasks` | Returns all tasks ordered by `id`. Empty state is `[]`. |
-| `POST` | `/api/tasks` | Creates a task. |
-| `PUT` | `/api/tasks/{id}` | Updates task text and completion state. |
-| `PATCH` | `/api/tasks/{id}/toggle` | Toggles task completion. |
-| `DELETE` | `/api/tasks/{id}` | Deletes a task. |
+| `GET` | `/` | Возвращает HTML приложения. |
+| `GET` | `/static/*` | Отдает frontend-файлы из `Web/`. |
+| `GET` | `/api/tasks` | Возвращает все задачи, отсортированные по `id`. Пустой список — `[]`. |
+| `POST` | `/api/tasks` | Создает задачу. |
+| `PUT` | `/api/tasks/{id}` | Обновляет текст и статус задачи. |
+| `PATCH` | `/api/tasks/{id}/toggle` | Переключает статус выполнения. |
+| `DELETE` | `/api/tasks/{id}` | Удаляет задачу. |
 
-Create a task with curl:
+Создать задачу через curl:
 
 ```sh
 curl -X POST http://localhost:8000/api/tasks \
   -H "Content-Type: application/json" \
-  -d '{"text":"Review CI pipeline","completed":false}'
+  -d '{"text":"Проверить CI pipeline","completed":false}'
 ```
 
-Toggle a task:
+Переключить статус задачи:
 
 ```sh
 curl -X PATCH http://localhost:8000/api/tasks/1/toggle
 ```
 
-Delete a task:
+Удалить задачу:
 
 ```sh
 curl -X DELETE http://localhost:8000/api/tasks/1
 ```
 
-## Testing And Quality
+## Тесты и качество
 
-Run tests:
+Запустить тесты:
 
 ```sh
 python3 -m pytest -q
 ```
 
-Run lint:
+Запустить lint:
 
 ```sh
 ruff check Api
 ```
 
-Compile-check backend files:
+Проверить компиляцию backend-файлов:
 
 ```sh
 python3 -m compileall Api
 ```
 
-Check frontend JavaScript syntax if Node.js is available:
+Проверить синтаксис frontend JavaScript, если установлен Node.js:
 
 ```sh
 node --check Web/main.js
@@ -271,7 +271,7 @@ node --check Web/main.js
 
 ## CI/CD
 
-The GitLab pipeline contains these stages:
+GitLab pipeline состоит из этапов:
 
 - `lint`
 - `test`
@@ -279,70 +279,70 @@ The GitLab pipeline contains these stages:
 - `deploy`
 - `notify`
 
-Pipeline behavior:
+Что делает pipeline:
 
-- `lint-job` installs Ruff and checks `Api/`.
-- `unit-tests` installs runtime dependencies plus Pytest and runs the test suite.
-- `build-job` installs backend dependencies, copies `Api/` and `Web/` into `build/`, and runs Python compile checks.
-- `deploy-job` runs on `master`, pulls the current branch on the deployment host, rebuilds Docker Compose, and starts the app.
-- `notify-success` and `notify-failure` send Telegram notifications through `scripts/notify_telegram.sh`.
+- `lint-job` устанавливает Ruff и проверяет `Api/`.
+- `unit-tests` устанавливает runtime-зависимости, Pytest и запускает тесты.
+- `build-job` устанавливает backend-зависимости, копирует `Api/` и `Web/` в `build/`, затем запускает compile-check Python-файлов.
+- `deploy-job` запускается на `master`, подтягивает текущую ветку на сервере, пересобирает Docker Compose и поднимает приложение.
+- `notify-success` и `notify-failure` отправляют Telegram-уведомления через `scripts/notify_telegram.sh`.
 
-Deployment variables used by CI:
+Переменные деплоя в CI:
 
 ```text
 DEPLOY_PATH=/home/vboxuser/todolist
 DOCKER_COMPOSE_FILE=docker-compose.yml
 ```
 
-Telegram notification variables expected in CI:
+Ожидаемые переменные для Telegram-уведомлений:
 
 ```text
 TELEGRAM_BOT_TOKEN
 TELEGRAM_CHAT_ID
 ```
 
-## Current Limitations
+## Текущие ограничения
 
-- Not-found API cases currently return message payloads instead of HTTP `404`.
-- CORS is fully open.
-- There is no authentication or multi-user ownership model.
-- Database migrations are not configured.
-- Tests cover only model serialization and schema validation, not full API flows.
+- Случаи "задача не найдена" пока возвращают JSON-сообщение вместо HTTP `404`.
+- CORS полностью открыт.
+- Нет авторизации и разделения задач по пользователям.
+- Нет миграций базы данных.
+- Тесты покрывают только сериализацию модели и валидацию схемы, но не полный API flow.
 
 ## Roadmap
 
-Short-term:
+Ближайшие улучшения:
 
-- Return proper HTTP errors for missing tasks.
-- Add API integration tests with a temporary SQLite database.
-- Add a project-specific screenshot to this README.
-- Replace alert-free frontend statuses with richer toast or inline error states.
+- Возвращать корректные HTTP-ошибки для отсутствующих задач.
+- Добавить API integration tests с временной SQLite-базой.
+- Добавить screenshot интерфейса в README.
+- Улучшить inline-статусы ошибок и успешных действий.
 
-Medium-term:
+Среднесрочно:
 
-- Split backend code into `database`, `models`, `schemas`, and `routes` modules.
-- Add Alembic migrations if the task schema grows.
-- Add due dates or priority levels.
-- Add frontend tests for filtering, search, and editing behavior.
+- Разделить backend на модули `database`, `models`, `schemas` и `routes`.
+- Добавить Alembic migrations, если схема задач будет расширяться.
+- Добавить сроки выполнения или приоритеты.
+- Добавить frontend-тесты для фильтров, поиска и редактирования.
 
-Long-term:
+Дальше:
 
-- Add authentication and user-specific task lists.
-- Add health checks for deployment.
-- Add structured logging.
-- Add production ASGI server configuration.
+- Добавить авторизацию и пользовательские списки задач.
+- Добавить health checks для деплоя.
+- Добавить structured logging.
+- Настроить production ASGI server.
 
-## Repository Name Recommendation
+## Рекомендация по названию репозитория
 
-Use:
+Лучший вариант:
 
 ```text
 focus-list
 ```
 
-Why this name works:
+Почему это название подходит:
 
-- It matches the current product idea: a focused task list, not a generic todo demo.
-- It is short and readable in URLs.
-- It has a clean English repo slug while the UI can still use the Russian title `Фокус-лист`.
-- It leaves room for the app to grow beyond basic todo CRUD.
+- Оно совпадает с текущей идеей продукта: сфокусированный список задач, а не просто демо ToDo CRUD.
+- Коротко и понятно выглядит в URL.
+- Английский repo slug хорошо читается, а интерфейс может оставаться русским: `Фокус-лист`.
+- Название оставляет место для роста проекта за пределы базового списка задач.
