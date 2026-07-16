@@ -1,93 +1,348 @@
-# ToDoList
+# FocusList
 
+FocusList is a compact task dashboard for keeping a daily work list under control. It started as a simple ToDo app and grew into a small full-stack project with a FastAPI backend, SQLite persistence, a vanilla JavaScript frontend, Docker runtime, and GitLab CI/CD.
 
+Recommended repository name: `focus-list`.
 
-## Getting started
+Other good names if you want alternatives:
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+- `focus-board`
+- `task-pulse`
+- `daily-focus`
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+## Idea
 
-## Add your files
+The project is not trying to be a heavy project-management system. Its job is narrower: give one person a clean place to capture tasks, see progress, filter the list, and close completed work without leaving the page.
 
-* [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+The current UI is built around a "focus dashboard":
 
+- progress ring for completed work;
+- counters for all, active, and completed tasks;
+- search with highlighted matches;
+- filters for all, active, and completed tasks;
+- inline task editing;
+- one-click completion toggle;
+- cleanup for completed tasks.
+
+## Features
+
+- Create tasks.
+- Edit task text inline.
+- Mark tasks as completed or return them to active work.
+- Delete individual tasks.
+- Clear all completed tasks from the UI.
+- Search tasks on the client.
+- Filter tasks by status.
+- Persist tasks in SQLite.
+- Serve frontend and API from one FastAPI application.
+- Run locally or with Docker Compose.
+- Build, lint, test, deploy, and notify through GitLab CI.
+
+## Architecture
+
+```text
+Browser
+  |
+  | GET /
+  | GET /static/*
+  | fetch /api/tasks
+  v
+FastAPI app: Api/main.py
+  |
+  | SQLAlchemy async session
+  v
+SQLite database
 ```
-cd existing_repo
-git remote add origin https://gitlab.kupriyanov.space/mishabalaganskiy/todolist.git
-git branch -M master
-git push -uf origin master
+
+The project intentionally keeps the architecture small:
+
+- `Api/main.py` owns the FastAPI app, API routes, SQLAlchemy model, Pydantic schema, database startup, and static file serving.
+- `Web/index.html` defines the dashboard layout.
+- `Web/main.js` manages client-side state, rendering, filters, search, editing, and API calls.
+- `Web/style.css` contains the responsive dashboard styling.
+- `tests/test_models.py` covers basic schema and serialization behavior.
+- `.gitlab-ci.yml` defines lint, test, build, deploy, and notify jobs.
+- `Dockerfile` and `docker-compose.yml` define the container runtime.
+
+This layout is practical for a learning project or a small demo. If the app grows, the backend can be split into modules for database setup, models, schemas, and routers.
+
+## Tech Stack
+
+Backend:
+
+- Python
+- FastAPI
+- Pydantic
+- SQLAlchemy async ORM
+- SQLite
+- aiosqlite
+- greenlet
+- Uvicorn
+
+Frontend:
+
+- HTML
+- CSS
+- Vanilla JavaScript
+- Fetch API
+
+Infrastructure:
+
+- Docker
+- Docker Compose
+- GitLab CI/CD
+- Ruff
+- Pytest
+- Telegram deploy notifications through a shell script
+
+## Project Structure
+
+```text
+.
+├── Api/
+│   ├── main.py
+│   └── requirements.txt
+├── Web/
+│   ├── index.html
+│   ├── main.js
+│   └── style.css
+├── ci/
+│   └── template.yml
+├── scripts/
+│   └── notify_telegram.sh
+├── tests/
+│   └── test_models.py
+├── .gitlab-ci.yml
+├── Dockerfile
+├── docker-compose.yml
+└── README.md
 ```
 
-## Integrate with your tools
+## Requirements
 
-* [Set up project integrations](https://gitlab.kupriyanov.space/mishabalaganskiy/todolist/-/settings/integrations)
+For local development:
 
-## Collaborate with your team
+- Python 3.11 recommended
+- `pip`
+- Docker and Docker Compose if you want containerized runtime
 
-* [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+The CI pipeline uses `python:3.11-alpine`.
 
-## Test and Deploy
+## Local Setup
 
-Use the built-in continuous integration in GitLab.
+Create and activate a virtual environment:
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+```sh
+python3 -m venv .venv
+source .venv/bin/activate
+```
 
-***
+Install runtime and development dependencies:
 
-# Editing this README
+```sh
+python3 -m pip install -r Api/requirements.txt pytest ruff
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+Run the application:
 
-## Suggestions for a good README
+```sh
+uvicorn Api.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Open:
 
-## Name
-Choose a self-explaining name for your project.
+```text
+http://localhost:8000
+```
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+By default, local SQLite data is stored in:
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+```text
+Api/ToDoList.db
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+You can override the database path:
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+```sh
+DB_PATH=/tmp/focus-list.db uvicorn Api.main:app --reload --host 0.0.0.0 --port 8000
+```
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+## Docker Run
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+Build and start the app:
+
+```sh
+docker-compose up --build
+```
+
+Open:
+
+```text
+http://localhost:8000
+```
+
+Docker Compose persists the SQLite database in the local `data/` directory:
+
+```text
+./data/ToDoList.db
+```
+
+Stop the app:
+
+```sh
+docker-compose down
+```
+
+## API
+
+Base task endpoint:
+
+```text
+/api/tasks
+```
+
+Task shape:
+
+```json
+{
+  "id": 1,
+  "text": "Prepare release notes",
+  "completed": false
+}
+```
+
+Endpoints:
+
+| Method | Path | Description |
+| --- | --- | --- |
+| `GET` | `/` | Returns the web app HTML. |
+| `GET` | `/static/*` | Serves frontend assets from `Web/`. |
+| `GET` | `/api/tasks` | Returns all tasks ordered by `id`. Empty state is `[]`. |
+| `POST` | `/api/tasks` | Creates a task. |
+| `PUT` | `/api/tasks/{id}` | Updates task text and completion state. |
+| `PATCH` | `/api/tasks/{id}/toggle` | Toggles task completion. |
+| `DELETE` | `/api/tasks/{id}` | Deletes a task. |
+
+Create a task with curl:
+
+```sh
+curl -X POST http://localhost:8000/api/tasks \
+  -H "Content-Type: application/json" \
+  -d '{"text":"Review CI pipeline","completed":false}'
+```
+
+Toggle a task:
+
+```sh
+curl -X PATCH http://localhost:8000/api/tasks/1/toggle
+```
+
+Delete a task:
+
+```sh
+curl -X DELETE http://localhost:8000/api/tasks/1
+```
+
+## Testing And Quality
+
+Run tests:
+
+```sh
+python3 -m pytest -q
+```
+
+Run lint:
+
+```sh
+ruff check Api
+```
+
+Compile-check backend files:
+
+```sh
+python3 -m compileall Api
+```
+
+Check frontend JavaScript syntax if Node.js is available:
+
+```sh
+node --check Web/main.js
+```
+
+## CI/CD
+
+The GitLab pipeline contains these stages:
+
+- `lint`
+- `test`
+- `build`
+- `deploy`
+- `notify`
+
+Pipeline behavior:
+
+- `lint-job` installs Ruff and checks `Api/`.
+- `unit-tests` installs runtime dependencies plus Pytest and runs the test suite.
+- `build-job` installs backend dependencies, copies `Api/` and `Web/` into `build/`, and runs Python compile checks.
+- `deploy-job` runs on `master`, pulls the current branch on the deployment host, rebuilds Docker Compose, and starts the app.
+- `notify-success` and `notify-failure` send Telegram notifications through `scripts/notify_telegram.sh`.
+
+Deployment variables used by CI:
+
+```text
+DEPLOY_PATH=/home/vboxuser/todolist
+DOCKER_COMPOSE_FILE=docker-compose.yml
+```
+
+Telegram notification variables expected in CI:
+
+```text
+TELEGRAM_BOT_TOKEN
+TELEGRAM_CHAT_ID
+```
+
+## Current Limitations
+
+- Not-found API cases currently return message payloads instead of HTTP `404`.
+- CORS is fully open.
+- There is no authentication or multi-user ownership model.
+- Database migrations are not configured.
+- Tests cover only model serialization and schema validation, not full API flows.
 
 ## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+Short-term:
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+- Return proper HTTP errors for missing tasks.
+- Add API integration tests with a temporary SQLite database.
+- Add a project-specific screenshot to this README.
+- Replace alert-free frontend statuses with richer toast or inline error states.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+Medium-term:
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+- Split backend code into `database`, `models`, `schemas`, and `routes` modules.
+- Add Alembic migrations if the task schema grows.
+- Add due dates or priority levels.
+- Add frontend tests for filtering, search, and editing behavior.
 
-## License
-For open source projects, say how it is licensed.
+Long-term:
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+- Add authentication and user-specific task lists.
+- Add health checks for deployment.
+- Add structured logging.
+- Add production ASGI server configuration.
+
+## Repository Name Recommendation
+
+Use:
+
+```text
+focus-list
+```
+
+Why this name works:
+
+- It matches the current product idea: a focused task list, not a generic todo demo.
+- It is short and readable in URLs.
+- It has a clean English repo slug while the UI can still use the Russian title `Фокус-лист`.
+- It leaves room for the app to grow beyond basic todo CRUD.
