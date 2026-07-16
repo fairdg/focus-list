@@ -58,9 +58,9 @@ def serialize_task(task: "TaskModel") -> dict:
 
 @app.get("/api/tasks")
 async def get_tasks(session: sessiondep):
-    result = await session.execute(select(TaskModel))
+    result = await session.execute(select(TaskModel).order_by(TaskModel.id))
     tasks = result.scalars().all()
-    return [serialize_task(task) for task in tasks] or {"message": "Список задач пуст"}
+    return [serialize_task(task) for task in tasks]
 
 @app.post("/api/tasks")
 async def create_task(task: TaskAddSchema, session: sessiondep):
